@@ -1,7 +1,11 @@
 from pydantic import BaseModel
 from datetime import datetime
-from .models import TaskStatus
+import enum
 
+class TaskStatus(str, enum.Enum):
+    NEW = "NEW"
+    IN_PROGRESS = "IN_PROGRESS"
+    RESOLVED = "RESOLVED"
 
 class TaskBase(BaseModel):
     title: str
@@ -14,22 +18,8 @@ class TaskCreate(TaskBase):
 class TaskUpdate(TaskBase):
     pass
 
-
-class TaskResponse(BaseModel):
+class TaskResponse(TaskBase):
     id: int
-    title: str
-    description: str | None
-    status: str
     created_at: datetime
     updated_at: datetime | None
 
-    class Config:
-        orm_mode = True
-
-    def dict(self, **kwargs):
-        result = super().dict(**kwargs)
-        result["created_at"] = self.created_at.isoformat() if self.created_at else None
-        result["updated_at"] = self.updated_at.isoformat() if self.updated_at else None
-        return result
-
-#test
