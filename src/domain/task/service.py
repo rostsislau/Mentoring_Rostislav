@@ -1,8 +1,9 @@
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.exc import NoResultFound
-from domain.task.models import Task
-from domain.task.schemas import TaskCreate, TaskUpdate
+
+from .models import Task
+from .schemas import TaskCreate, TaskUpdate
 
 
 class TaskService:

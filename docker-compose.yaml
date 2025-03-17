@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16
+    container_name: tasks_db
+    restart: always
+    environment:
+      POSTGRES_USER: tasks_user
+      POSTGRES_PASSWORD: mypass123
+      POSTGRES_DB: tasks
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tasks_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tasks_user -d tasks"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: tasks_app
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://tasks_user:mypass123@db/tasks
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/app
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    networks:
+      - tasks_network
+
+networks:
+  tasks_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
+
+
+

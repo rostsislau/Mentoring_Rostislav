@@ -1,11 +1,9 @@
-from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
-from config import config
+from sqlalchemy.orm import DeclarativeBase
 
 
-engine: AsyncEngine = create_async_engine(config.db.db_url)
-AsyncSessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False)
+class Base(DeclarativeBase):
+    pass
 
 
-async def get_async_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+# Импорт моделей, чтобы Alembic их видел
+# from src.domain.task.models import Task

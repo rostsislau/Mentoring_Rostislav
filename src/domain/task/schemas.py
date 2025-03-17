@@ -1,6 +1,8 @@
-from pydantic import BaseModel
 from datetime import datetime
-from domain.task.models import TaskStatus
+
+from pydantic import BaseModel
+
+from .models import TaskStatus
 
 
 class TaskBase(BaseModel):

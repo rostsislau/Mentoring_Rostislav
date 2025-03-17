@@ -1,7 +1,8 @@
-from db.base import get_async_db
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
-from domain.task.service import TaskService
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.db.engine import get_async_db
+from src.domain.task.service import TaskService
 
 
 async def get_db_session():
@@ -9,7 +10,5 @@ async def get_db_session():
         yield session
 
 
-async def get_task_service(
-    db_session: AsyncSession = Depends(get_async_db)):
+async def get_task_service(db_session: AsyncSession = Depends(get_async_db)):
     return TaskService(db_session)
-
